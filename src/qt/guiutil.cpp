@@ -117,7 +117,7 @@ void setupAddressWidget(QValidatedLineEdit *widget, QWidget *parent)
 #if QT_VERSION >= 0x040700
     // We don't want translators to use own addresses in translations
     // and this is the only place, where this address is supplied.
-    widget->setPlaceholderText(QObject::tr("Enter a Motion address (e.g. %1)").arg("MbWMQqUNEosjjEb9WAGuJ5KGN9h4WL5bqf"));
+    widget->setPlaceholderText(QObject::tr("Enter a Motion address (e.g. %1)").arg("MTDieJT19g3XeLD7Ek5XwuhEoTJuaLKrGM"));
 #endif
     widget->setValidator(new MotionAddressEntryValidator(parent));
     widget->setCheckValidator(new MotionAddressCheckValidator(parent));

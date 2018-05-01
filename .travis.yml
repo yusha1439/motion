@@ -75,6 +75,7 @@ script:
     - MOTION_CONFIG_ALL="--disable-dependency-tracking --prefix=$TRAVIS_BUILD_DIR/depends/$HOST --bindir=$OUTDIR/bin --libdir=$OUTDIR/lib"
     - depends/$HOST/native/bin/ccache --max-size=$CCACHE_SIZE
     - test -n "$USE_SHELL" && eval '"$USE_SHELL" -c "./autogen.sh"' || ./autogen.sh
+    - ls
     - ./configure --cache-file=config.cache $MOTION_CONFIG_ALL $MOTION_CONFIG || ( cat config.log && false)
     - make distdir PACKAGE=motion VERSION=$HOST
     - cd motion-$HOST
