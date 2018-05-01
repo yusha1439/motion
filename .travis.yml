@@ -78,6 +78,7 @@ script:
     - ./configure --cache-file=config.cache $MOTION_CONFIG_ALL $MOTION_CONFIG || ( cat config.log && false)
     - make distdir PACKAGE=motion VERSION=$HOST
     - cd motion-$HOST
+    - ls
     - ./configure --cache-file=../config.cache $MOTION_CONFIG_ALL $MOTION_CONFIG || ( cat config.log && false)
     - make $MAKEJOBS $GOAL || ( echo "Build failure. Verbose build follows." && make $GOAL V=1 ; false )
     - export LD_LIBRARY_PATH=$TRAVIS_BUILD_DIR/depends/$HOST/lib
