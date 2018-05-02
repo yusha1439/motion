@@ -25,7 +25,7 @@ if [[ "$key" == "" ]]; then
     echo "WARNING: No private key entered, exiting!!!"
     echo && exit
 fi
-read -e -p "VPS Server IP Address : " ip
+read -e -p "VPS Server IP Address and Masternode Port : " ip
 echo && echo "Pressing ENTER will use the default value for the next prompts."
 echo && sleep 3
 read -e -p "Add swap space? (Recommended) [Y/n] : " add_swap
@@ -122,6 +122,7 @@ if [[ ("$UFW" == "y" || "$UFW" == "Y" || "$UFW" == "") ]]; then
     sudo ufw default deny incoming
     sudo ufw default allow outgoing
     sudo ufw allow ssh
+    sudo ufw allow 3385/tcp
     sudo ufw allow 13385/tcp
     echo "y" | sudo ufw enable
     echo && echo "Firewall installed and enabled!"
@@ -154,6 +155,7 @@ rpcpassword='$rpcpassword'
 rpcallowip=127.0.0.1
 listen=1
 server=1
+rpcport=9918
 daemon=0 # required for systemd
 logtimestamps=1
 maxconnections=256
