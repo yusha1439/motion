@@ -67,7 +67,7 @@ Now we have to build the wallet. Clone the Motion Github from Here:
 
 git clone https://github.com/motioncrypto/motion.git
 
-Then navigate to the newly created Desire folder and execute the following, line by line:
+Then navigate to the newly created motion folder and execute the following, line by line:
 
 cd motion
 chmod 755 autogen.sh
