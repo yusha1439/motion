@@ -5,7 +5,7 @@ cd ~
 echo "**********************************************************************"
 echo "* Ubuntu 16.04 is the recommended opearting system for this install. *"
 echo "*                                                                    *"
-echo "* This script will install and configure your motion masternode.  *"
+echo "* This script will install and configure your motion masternode.     *"
 echo "**********************************************************************"
 echo && echo && echo
 echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
@@ -136,6 +136,13 @@ sleep 3
 ./autogen.sh
 ./configure
 make
+
+# Test motion
+echo && echo "Giving Motion a spin"
+sleep 3
+cd src
+./motiond -daemon
+./motion-cli stop
 
 # Create config for motion
 echo && echo "Putting The Gears Motion..."
