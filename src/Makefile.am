@@ -330,6 +330,7 @@ crypto_libmotion_crypto_a_SOURCES += \
   crypto/shavite.c \
   crypto/simd.c \
   crypto/skein.c \
+  crypto/md_helper.c \ 
   crypto/sph_fugue.c \
   crypto/sph_shabal.c \
   crypto/sph_hamsi.c \
