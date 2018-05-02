@@ -335,6 +335,7 @@ crypto_libmotion_crypto_a_SOURCES += \
   crypto/sph_hamsi.c \
   crypto/sph_hamsi_helper.c \
   crypto/sph_whirlpool.c \
+  crypto/sph_sha2.c \
   crypto/sph_blake.h \
   crypto/sph_bmw.h \
   crypto/sph_cubehash.h \
@@ -351,9 +352,10 @@ crypto_libmotion_crypto_a_SOURCES += \
   crypto/sph_shabal.h \
   crypto/sph_hamsi.h \
   crypto/sph_whirlpool.h \
+  crypto/sph_sha2.h \
   crypto/sph_sha512.c \
   crypto/sha512.cpp \
-  crypto/sha512.h
+  crypto/sha512.h 
 
 # common: shared between motiond, and motion-qt and non-server tools
 libmotion_common_a_CPPFLAGS = $(AM_CPPFLAGS) $(MOTION_INCLUDES)
