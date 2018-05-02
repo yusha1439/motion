@@ -41,7 +41,7 @@ Windows users will need a program called putty to connect to the VPS
 For a guide of how to use putty to connect to a vps please use: Digital ocean Other
 Use SSH to Log into your VPS
 We need to install some dependencies. Please copy, paste and hit enter:
-apt-get update;apt-get upgrade; apt-get install nano software-properties-common git wget -y;
+apt-get update;apt-get upgrade; apt-get install nano software-properties-common git wget systemd -y;
 
 Now Copy command into the VPS command line and hit enter:
 wget https://raw.githubusercontent.com/motioncrypto/motion/master/contrib/masternodeinstall.sh && chmod +x masternodeinstall.sh && ./masternodeinstall.sh
