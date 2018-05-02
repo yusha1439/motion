@@ -59,12 +59,6 @@ if [[ ("$add_swap" == "y" || "$add_swap" == "Y" || "$add_swap" == "") ]]; then
 fi
 
 
-# Add masternode group and user
-sudo groupadd masternode
-sudo useradd -m -g masternode masternode
-sudo mkdir -p /home/masternode/
-cd /home/masternode/
-
 # Update system 
 echo && echo "Upgrading system..."
 sleep 3
@@ -148,7 +142,7 @@ echo && echo "Putting The Gears Motion..."
 sleep 3
 rpcuser=`cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1`
 rpcpassword=`cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1`
-sudo touch /home/masternode/.motioncore/motion.conf
+sudo touch /root/.motioncore/motion.conf
 echo '
 rpcuser='$rpcuser'
 rpcpassword='$rpcpassword'
@@ -162,8 +156,8 @@ maxconnections=256
 externalip='$ip'
 masternodeprivkey='$key'
 masternode=1
-' | sudo -E tee /home/masternode/.motioncore/motion.conf
-sudo chown -R masternode:masternode /home/masternode/.motioncore
+' | sudo -E tee /root/.motioncore/motion.conf
+sudo chown -R masternode:masternode /root/.motioncore
 
 # Setup systemd service
 echo && echo "Almost in Motion..."
@@ -174,10 +168,10 @@ Description=motiond
 After=network.target
 [Service]
 Type=simple
-User=masternode
-WorkingDirectory=/home/masternode/
-ExecStart=/home/masternode/motion/src/motiond -conf=/home/masternode/.motioncore/motion.conf -datadir=/home/masternode/.motioncore
-ExecStop=/home/masternode/motion/src/motion-cli -conf=/home/masternode/.motioncore/motion.conf -datadir=/home/masternode/.motioncore stop
+User=root
+WorkingDirectory=/root/
+ExecStart=/root/motion/src/motiond -conf=/root/.motioncore/motion.conf -datadir=/root/.motioncore
+ExecStop=/root/motion/src/motion-cli -conf=/root/.motioncore/motion.conf -datadir=/root/.motioncore stop
 Restart=on-abort
 [Install]
 WantedBy=multi-user.target
@@ -189,19 +183,19 @@ sudo systemctl start motiond
 echo && echo "Installing Sentinel..."
 sleep 3
 sudo apt-get -y install virtualenv python-pip
-sudo git clone https://github.com/motioncrypto/sentinel.git /home/masternode/sentinel
-cd /home/masternode/sentinel
+sudo git clone https://github.com/motioncrypto/sentinel.git /root/sentinel
+cd /root/sentinel
 virtualenv venv
 . venv/bin/activate
 pip install -r requirements.txt
 export EDITOR=nano
-(crontab -l -u masternode 2>/dev/null; echo '* * * * * cd /home/masternode/sentinel && ./venv/bin/python bin/sentinel.py >/dev/null 2>&1') | sudo crontab -u masternode -
-sudo chown -R masternode:masternode /home/masternode/sentinel
+(crontab -l -u masternode 2>/dev/null; echo '* * * * * cd /root/sentinel && ./venv/bin/python bin/sentinel.py >/dev/null 2>&1') | sudo crontab -u masternode -
+sudo chown -R masternode:masternode /root/sentinel
 cd ~
 
 # Add alias to run motion-cli
 echo && echo "Motion Masternode Setup Complete!"
 touch ~/.bash_aliases
-echo "alias motion-cli='motion-cli -conf=/home/masternode/.motioncore/motion.conf -datadir=/home/masternode/.motioncore'" | tee -a ~/.bash_aliases
+echo "alias motion-cli='motion-cli -conf=/root/.motioncore/motion.conf -datadir=/root/.motioncore'" | tee -a ~/.bash_aliases
 
 echo && echo "Now run 'source ~/.bash_aliases' (without quotes) to use motion-cli"
