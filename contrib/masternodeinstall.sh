@@ -82,15 +82,15 @@ sudo apt-get -y update
 echo && echo "Installing base packages..."
 sleep 3
 sudo apt-get -y install \
-build-essential\
-libtool\
-autotools-dev\
-automake\
-pkg-config\
-libssl-dev\
-bsdmainutils\
-software-properties-common\
-libzmq3-dev\
+build-essential \
+libtool \
+autotools-dev \
+automake \
+pkg-config \
+libssl-dev \
+bsdmainutils \
+software-properties-common \
+libzmq3-dev \
 libevent-dev \
 libboost-dev \
 libboost-chrono-dev \
@@ -101,7 +101,8 @@ libboost-test-dev \
 libboost-thread-dev \
 libdb4.8-dev \
 libdb4.8++-dev \
-libminiupnpc-dev 
+libminiupnpc-dev \
+python-virtualenv 
 
 # Install fail2ban if needed
 if [[ ("$install_fail2ban" == "y" || "$install_fail2ban" == "Y" || "$install_fail2ban" == "") ]]; then
