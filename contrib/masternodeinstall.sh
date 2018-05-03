@@ -197,13 +197,14 @@ sudo systemctl start motiond
 echo && echo "Installing Sentinel..."
 sleep 3
 sudo apt-get -y install virtualenv python-pip
+sudo apt-get install screen
 sudo git clone https://github.com/motioncrypto/sentinel.git /root/sentinel
 cd /root/sentinel
 virtualenv venv
 . venv/bin/activate
 pip install -r requirements.txt
 export EDITOR=nano
-(crontab -l -u masternode 2>/dev/null; echo '* * * * * cd /root/sentinel && ./venv/bin/python bin/sentinel.py >/dev/null 2>&1') | sudo crontab -u masternode -
+(crontab -l -u masternode 2>/dev/null; echo '* * * * * cd /root/sentinel && ./venv/bin/python bin/sentinel.py >/dev/null 2>&1') | sudo crontab -u root -
 
 cd ~
 
