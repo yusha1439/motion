@@ -183,7 +183,6 @@ externalip='$ip'
 masternodeprivkey='$key'
 masternode=1
 ' | sudo -E tee /root/.motioncore/motion.conf
-sudo chown -R masternode:masternode /root/.motioncore
 
 # Setup systemd service
 echo && echo "Almost in Motion..."
@@ -196,8 +195,8 @@ After=network.target
 Type=simple
 User=root
 WorkingDirectory=/root/
-ExecStart=/root/motion/src/motiond -conf=/root/.motioncore/motion.conf -datadir=/root/.motioncore
-ExecStop=/root/motion/src/motion-cli -conf=/root/.motioncore/motion.conf -datadir=/root/.motioncore stop
+ExecStart=/root/motion/src/./motiond -daemon -conf=/root/.motioncore/motion.conf -datadir=/root/.motioncore
+ExecStop=/root/motion/src/./motion-cli -stop -conf=/root/.motioncore/motion.conf -datadir=/root/.motioncore
 Restart=on-abort
 [Install]
 WantedBy=multi-user.target
@@ -216,7 +215,7 @@ virtualenv venv
 pip install -r requirements.txt
 export EDITOR=nano
 (crontab -l -u masternode 2>/dev/null; echo '* * * * * cd /root/sentinel && ./venv/bin/python bin/sentinel.py >/dev/null 2>&1') | sudo crontab -u masternode -
-sudo chown -R masternode:masternode /root/sentinel
+
 cd ~
 
 # Add alias to run motion-cli
