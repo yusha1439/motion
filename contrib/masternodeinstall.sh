@@ -155,12 +155,10 @@ cd src
 # Create config for motion
 echo && echo "Putting The Gears Motion..."
 sleep 3
-rpcuser=`cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1`
-rpcpassword=`cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1`
 sudo touch /root/.motioncore/motion.conf
 echo '
-rpcuser='$rpcuser'
-rpcpassword='$rpcpassword'
+rpcuser=user
+rpcpassword=pass
 rpcallowip=127.0.0.1
 listen=1
 server=1
@@ -183,9 +181,8 @@ After=network.target
 [Service]
 Type=simple
 User=root
-WorkingDirectory=/root/
-ExecStart=/root/motion/src/./motiond -daemon -conf=/root/.motioncore/motion.conf -datadir=/root/.motioncore
-ExecStop=/root/motion/src/./motion-cli -stop -conf=/root/.motioncore/motion.conf -datadir=/root/.motioncore
+ExecStart=/root/motion/src/./motiond -daemon
+ExecStop=/root/motion/src/./motion-cli -stop
 Restart=on-abort
 [Install]
 WantedBy=multi-user.target
