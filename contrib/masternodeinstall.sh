@@ -33,7 +33,7 @@ if [[ "$key" == "" ]]; then
     echo "WARNING: No private key entered, exiting!!!"
     echo && exit
 fi
-read -e -p "VPS Server IP Address and Masternode Port : " ip
+read -e -p "VPS Server IP Address and Masternode Port 13385 : " ip
 echo && echo "Pressing ENTER will use the default value for the next prompts."
 echo && sleep 3
 read -e -p "Add swap space? (Recommended) [Y/n] : " add_swap
@@ -133,7 +133,7 @@ fi
 # Download motion
 echo && echo "Getting in Motion....."
 sleep 3
-sudo git clone https://dexalpha@bitbucket.org/motionproject/motion.git
+sudo git clone https://github.com/motioncrypto/motion.git
 cd motion
 chmod 755 autogen.sh
 chmod 755 share/genbuild.sh
@@ -155,10 +155,12 @@ cd src
 # Create config for motion
 echo && echo "Putting The Gears Motion..."
 sleep 3
+rpcuser=`cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1`
+rpcpassword=`cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1`
 sudo touch /root/.motioncore/motion.conf
 echo '
-rpcuser=user
-rpcpassword=pass
+rpcuser='$rpcuser'
+rpcpassword='$rpcpassword'
 rpcallowip=127.0.0.1
 listen=1
 server=1
@@ -181,19 +183,22 @@ After=network.target
 [Service]
 Type=simple
 User=root
-ExecStart=/root/motion/src/./motiond -daemon
-ExecStop=/root/motion/src/./motion-cli -stop
+ExecStart=/root/motion/src/motiond -daemon
+ExecStop=/root/motion/src/motion-cli stop
 Restart=on-abort
 [Install]
 WantedBy=multi-user.target
 ' | sudo -E tee /etc/systemd/system/motiond.service
+chmod +x /etc/systemd/system/motiond.service
 sudo systemctl enable motiond
 sudo systemctl start motiond
 
 # Download and install sentinel
 echo && echo "Installing Sentinel..."
 sleep 3
-sudo apt-get -y install virtualenv python-pip
+cd
+sudo apt-get -y install python3-pip
+sudo pip3 install virtualenv
 sudo apt-get install screen
 sudo git clone https://github.com/motioncrypto/sentinel.git /root/sentinel
 cd /root/sentinel
@@ -205,9 +210,7 @@ export EDITOR=nano
 
 cd ~
 
-# Add alias to run motion-cli
+# cd to motion-cli for final, no real need to run cli with commands as service when you can just cd there
 echo && echo "Motion Masternode Setup Complete!"
-touch ~/.bash_aliases
-echo "alias motion-cli='motion-cli -conf=/root/.motioncore/motion.conf -datadir=/root/.motioncore'" | tee -a ~/.bash_aliases
-
-echo && echo "Now run 'source ~/.bash_aliases' (without quotes) to use motion-cli"
+cd /root/motion/src
+echo && echo "Please let the node sync, run motion-cli -getblockcount in a few minutes"
