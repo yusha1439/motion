@@ -125,7 +125,7 @@ if [[ ("$UFW" == "y" || "$UFW" == "Y" || "$UFW" == "") ]]; then
     sudo ufw default allow outgoing
     sudo ufw allow ssh
     sudo ufw allow 3385/tcp
-    sudo ufw allow 13385/tcp
+    sudo ufw allow 7979/tcp
     echo "y" | sudo ufw enable
     echo && echo "Firewall installed and enabled!"
 fi
@@ -145,16 +145,12 @@ sleep 3
 ./configure
 make
 
-# Test motion
-echo && echo "Giving Motion a spin"
-sleep 3
-cd src
-./motiond -daemon
-./motion-cli stop
 
 # Create config for motion
 echo && echo "Putting The Gears Motion..."
 sleep 3
+sudo mkdir /root/.motioncore #jm
+
 rpcuser=`cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1`
 rpcpassword=`cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1`
 sudo touch /root/.motioncore/motion.conf
@@ -173,6 +169,14 @@ masternodeprivkey='$key'
 masternode=1
 ' | sudo -E tee /root/.motioncore/motion.conf
 
+# Test motion
+echo && echo "Giving Motion a spin"
+sleep 3
+cd src
+./motiond -daemon
+sleep 3 #jm
+./motion-cli stop
+
 # Setup systemd service
 echo && echo "Almost in Motion..."
 sleep 3
@@ -184,6 +188,7 @@ After=network.target
 Type=simple
 User=root
 ExecStart=/root/motion/src/motiond -daemon
+sleep 3  #jm
 ExecStop=/root/motion/src/motion-cli stop
 Restart=on-abort
 [Install]
@@ -212,5 +217,5 @@ cd ~
 
 # cd to motion-cli for final, no real need to run cli with commands as service when you can just cd there
 echo && echo "Motion Masternode Setup Complete!"
-cd /root/motion/src
-echo && echo "Please let the node sync, run motion-cli -getblockcount in a few minutes"
+
+echo && echo "Please let the node sync, run /root/motion/src/motion-cli -getblockcount in a few minutes"
