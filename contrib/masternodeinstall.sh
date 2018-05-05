@@ -33,7 +33,7 @@ if [[ "$key" == "" ]]; then
     echo "WARNING: No private key entered, exiting!!!"
     echo && exit
 fi
-read -e -p "VPS Server IP Address and Masternode Port 7979 : " ip
+read -e -p "VPS Server IP Address and Masternode Port 13385 : " ip
 echo && echo "Pressing ENTER will use the default value for the next prompts."
 echo && sleep 3
 read -e -p "Add swap space? (Recommended) [Y/n] : " add_swap
@@ -188,7 +188,6 @@ After=network.target
 Type=simple
 User=root
 ExecStart=/root/motion/src/motiond -daemon
-sleep 3  #jm
 ExecStop=/root/motion/src/motion-cli stop
 Restart=on-abort
 [Install]
