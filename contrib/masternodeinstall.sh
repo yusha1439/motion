@@ -88,6 +88,7 @@ build-essential \
 libtool \
 autotools-dev \
 automake \
+unzip \
 pkg-config \
 libssl-dev \
 bsdmainutils \
@@ -130,22 +131,6 @@ if [[ ("$UFW" == "y" || "$UFW" == "Y" || "$UFW" == "") ]]; then
     echo && echo "Firewall installed and enabled!"
 fi
 
-# Download motion
-echo && echo "Getting in Motion....."
-sleep 3
-sudo git clone https://github.com/motioncrypto/motion.git
-cd motion
-chmod 755 autogen.sh
-chmod 755 share/genbuild.sh
-
-# Install motion
-echo && echo "Putting This In Motion... Please Wait This May Take A While"
-sleep 3
-./autogen.sh
-./configure
-make
-
-
 # Create config for motion
 echo && echo "Putting The Gears Motion..."
 sleep 3
@@ -169,13 +154,26 @@ masternodeprivkey='$key'
 masternode=1
 ' | sudo -E tee /root/.motioncore/motion.conf
 
-# Test motion
-echo && echo "Giving Motion a spin"
-sleep 3
-cd src
+
+#Download pre-compiled motion and run
+mkdir motion 
+mkdir motion/src
+cd motion/src
+#Select OS architecture
+    if [ `getconf LONG_BIT` = "64" ]
+        then
+            wget https://github.com/motioncrypto/motion/releases/download/v0.1.1/motion-v0.1.1-lin-64bits.zip
+            unzip motion-v0.1.1-lin-64bits.zip
+    else
+        wget https://github.com/motioncrypto/motion/releases/download/v0.1.1/motion-v0.1.1-lin-32bits.zip
+        unzip motion-v0.1.1-lin-32bits.zip
+    fi
+chmod +x motiond
+chmod +x motion-cli
+chmod +x motion-tx
 ./motiond -daemon
-sleep 3 #jm
-./motion-cli stop
+#sleep 20
+#./motion-cli getinfo
 
 # Setup systemd service
 echo && echo "Almost in Motion..."
@@ -196,6 +194,7 @@ WantedBy=multi-user.target
 chmod +x /etc/systemd/system/motiond.service
 sudo systemctl enable motiond
 sudo systemctl start motiond
+#killall motiond
 
 # Download and install sentinel
 echo && echo "Installing Sentinel..."
@@ -212,9 +211,9 @@ pip install -r requirements.txt
 export EDITOR=nano
 (crontab -l -u masternode 2>/dev/null; echo '* * * * * cd /root/sentinel && ./venv/bin/python bin/sentinel.py >/dev/null 2>&1') | sudo crontab -u root -
 
-cd ~
+cd motion/src
 
 # cd to motion-cli for final, no real need to run cli with commands as service when you can just cd there
 echo && echo "Motion Masternode Setup Complete!"
 
-echo && echo "Please let the node sync, run /root/motion/src/motion-cli -getblockcount in a few minutes"
+echo && echo "Please run ./motion-cli getblockcount after a few minutes"
